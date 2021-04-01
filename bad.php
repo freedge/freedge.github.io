@@ -1,1 +1,1 @@
-<? toto tata ?>
+<?php a +  1 ?>
