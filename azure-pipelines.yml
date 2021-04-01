@@ -13,6 +13,9 @@ steps:
 - script: find -name "*.php" -exec php -d display_errors=on -l {} ";" 
   displayName: 'Lint'
 
+- script: sudo apt-get install phpmd ; phpmd . text cleancode,codesize,design,naming,unusedcode
+  displayName: 'Mess detector'
+
 - task: CmdLine@2
   inputs:
     script: |
@@ -22,6 +25,8 @@ steps:
   condition: and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/heads/master'))
   displayName: Temporary upload
 
+# Following fails until https://github.com/microsoft/azure-pipelines-tasks/issues/14676
+# is fixed.
 - task: FtpUpload@2
   inputs:
     credentialsOption: 'serviceEndpoint'
