@@ -13,6 +13,9 @@ steps:
 - script: find -name "*.php" -exec php -d display_errors=on -l {} ";" 
   displayName: 'Lint'
 
+- script: sudo apt-get install phpmd ; phpmd . text
+  displayName: 'Mess detector'
+
 - task: CmdLine@2
   inputs:
     script: |
