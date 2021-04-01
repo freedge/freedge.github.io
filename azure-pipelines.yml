@@ -1,0 +1,39 @@
+# Starter pipeline
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
+
+trigger:
+- master
+
+pool:
+  vmImage: ubuntu-latest
+
+steps:
+- script: find -name "*.php" -exec php -d display_errors=on -l {} ";" 
+  displayName: 'Lint'
+
+- task: CmdLine@2
+  inputs:
+    script: |
+      for file in `find -name "*.php" -or -name "*.html"` ; do
+        curl -u "$(FTPUSER):$(FTPPASS)" -T ${file} ftp://ftpperso.free.fr/web/${file}
+      done
+  condition: and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/heads/master'))
+  displayName: Temporary upload
+
+- task: FtpUpload@2
+  inputs:
+    credentialsOption: 'serviceEndpoint'
+    serverEndpoint: 'ftpfree'
+    rootDirectory: '$(Pipeline.Workspace)'
+    filePatterns: |
+      **/*.php
+      **/*.html
+    remoteDirectory: '/web'
+    clean: false
+    cleanContents: false
+    preservePaths: false
+    trustSSL: false
+  displayName: 'Publish'
+  condition: and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/heads/master'))
