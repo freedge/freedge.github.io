@@ -13,7 +13,7 @@ steps:
 - script: find -name "*.php" -exec php -d display_errors=on -l {} ";" 
   displayName: 'Lint'
 
-- script: sudo apt-get install phpmd ; phpmd . text
+- script: sudo apt-get install phpmd ; phpmd . text cleancode,codesize,controversial,design,naming,unusedcode
   displayName: 'Mess detector'
 
 - task: CmdLine@2
