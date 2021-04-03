@@ -19,7 +19,7 @@ steps:
 - task: CmdLine@2
   inputs:
     script: |
-      for file in `find -name "*.php" -or -name "*.html"` ; do
+      for file in `find -name "*.php" -or -name "*.html"` -or -name .htaccess ; do
         curl -u "$(FTPUSER):$(FTPPASS)" -T ${file} ftp://ftpperso.free.fr/web/${file}
       done
   condition: and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/heads/master'))
@@ -35,6 +35,7 @@ steps:
     filePatterns: |
       **/*.php
       **/*.html
+      **/*.htaccess
     remoteDirectory: '/web'
     clean: false
     cleanContents: false
