@@ -19,15 +19,18 @@ try {
 
 
 
-$response = new JsonResponse($body);
+$response = new JsonResponse($body, 200, array("date" => gmdate('D, d M Y H:i:s T')));
 $context = new HttpSignatures\Context([
             'keys' => ['mykey' => file_get_contents(__DIR__ . '/../.secret/key.pem')],
 	    'algorithm' => 'rsa-sha256',
-	    'headers' => [],
+	    'headers' => ['Date'],
 ]);
 
 // take quite some time though
-$response = $context->signer()->sign($response);
+$response = $context->signer()->signWithDigest($response);
+
+// can be verified with
+//   $context->verifier()->isSigned($response)
 
 
 (new SapiEmitter())->emit($response);
