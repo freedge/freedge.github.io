@@ -34,7 +34,7 @@ steps:
 - task: CmdLine@2
   inputs:
     script: |
-      for file in `find -name "*.php" -or -name "*.html"` -or -name .htaccess ; do
+      for file in `find -name "*.php" -or -name "*.html" -or -name .htaccess | grep -v vendor/ ` ; do
         curl --ftp-create-dirs -u "$(FTPUSER):$(FTPPASS)" -T ${file} ftp://ftpperso.free.fr/web/${file}
       done
   condition: and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/heads/master'))
