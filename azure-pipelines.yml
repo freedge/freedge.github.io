@@ -13,14 +13,17 @@ steps:
 - script: find -name "*.php" -exec php -d display_errors=on -l {} ";" 
   displayName: 'Lint'
 
-- script: sudo apt-get install phpmd ; phpmd . text cleancode,codesize,design,naming,unusedcode
+- script: sudo apt-get install phpmd composer ; phpmd . text cleancode,codesize,design,naming,unusedcode
   displayName: 'Mess detector'
+
+- script: composer install -o
+  displayName: 'Composer'
 
 - task: CmdLine@2
   inputs:
     script: |
       for file in `find -name "*.php" -or -name "*.html"` -or -name .htaccess ; do
-        curl -u "$(FTPUSER):$(FTPPASS)" -T ${file} ftp://ftpperso.free.fr/web/${file}
+        curl --ftp-create-dirs -u "$(FTPUSER):$(FTPPASS)" -T ${file} ftp://ftpperso.free.fr/web/${file}
       done
   condition: and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/heads/master'))
   displayName: Temporary upload
