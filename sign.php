@@ -7,7 +7,7 @@ use Zend\Diactoros\Response\SapiEmitter;
 
 $body = array(
   "hello" => "world",
-  "ip" => $_REQUEST['REMOTE_ADDR']
+  "ip" => $_SERVER['REMOTE_ADDR']
 );
 
 try {
