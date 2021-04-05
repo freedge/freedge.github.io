@@ -28,7 +28,7 @@ steps:
 - script: sudo apt-get install phpmd composer ; phpmd . text cleancode,codesize,design,naming,unusedcode
   displayName: 'Mess detector'
 
-- script: composer install -o
+- script: composer install --no-dev
   displayName: 'Composer'
 
 - task: CmdLine@2
