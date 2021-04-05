@@ -10,7 +10,7 @@ pool:
   vmImage: ubuntu-18.04
 
 variables:
-  phpVersion: 5.6
+  phpVersion: 7.2
 
 steps:
 - script: |
