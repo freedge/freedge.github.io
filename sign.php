@@ -11,7 +11,7 @@ $body = array(
 );
 
 try {
-  $body["meminfo"] = file_get_contents("/proc/meminfo");
+  $body["pubkey"] = file_get_contents(__DIR__ . '/../.secret/cert.pem');
 } catch (Exception $e) {
   $body["error"] = $e->getMessage();
 }
