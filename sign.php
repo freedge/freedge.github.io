@@ -5,7 +5,19 @@ use Zend\Diactoros\ServerRequestFactory;
 use Zend\Diactoros\Response\JsonResponse;
 use Zend\Diactoros\Response\SapiEmitter;
 
-$body = array("hello" => "world");
+$body = array(
+  "hello" => "world",
+  "ip" => $_REQUEST['REMOTE_ADDR']
+);
+
+try {
+  $body["meminfo"] = file_get_contents("/proc/meminfo");
+} catch (Exception $e) {
+  $body["error"] = $e->getMessage();
+}
+
+
+
 
 $response = new JsonResponse($body);
 $context = new HttpSignatures\Context([
@@ -13,7 +25,9 @@ $context = new HttpSignatures\Context([
 	    'algorithm' => 'rsa-sha256',
 	    'headers' => [],
 ]);
-$context->signer()->sign($response);
+
+// take quite some time though
+$response = $context->signer()->sign($response);
 
 
 (new SapiEmitter())->emit($response);
