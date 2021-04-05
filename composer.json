@@ -1,6 +1,6 @@
 {
     "require": {
-        "liamdennehy/http-signatures-php": "^11.0",
+        "liamdennehy/http-signatures-php": "10.0.*",
         "zendframework/zend-diactoros": "1.8.*"
     }
 }
