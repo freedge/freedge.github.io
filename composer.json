@@ -1,0 +1,7 @@
+{
+    "require": {
+        "liamdennehy/http-signatures-php": "^11.0",
+        "nyholm/psr7": "^1.4",
+        "laminas/laminas-httphandlerrunner": "^1.2"
+    }
+}

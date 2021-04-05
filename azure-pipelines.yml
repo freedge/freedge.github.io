@@ -7,20 +7,35 @@ trigger:
 - master
 
 pool:
-  vmImage: ubuntu-latest
+  vmImage: ubuntu-18.04
+
+variables:
+  phpVersion: 7.2
 
 steps:
+- script: |
+    sudo update-alternatives --set php /usr/bin/php$(phpVersion)
+    sudo update-alternatives --set phar /usr/bin/phar$(phpVersion)
+    sudo update-alternatives --set phpdbg /usr/bin/phpdbg$(phpVersion)
+    sudo update-alternatives --set php-cgi /usr/bin/php-cgi$(phpVersion)
+    sudo update-alternatives --set phar.phar /usr/bin/phar.phar$(phpVersion)
+    php -version
+  displayName: 'Use PHP version $(phpVersion)'
+
 - script: find -name "*.php" -exec php -d display_errors=on -l {} ";" 
   displayName: 'Lint'
 
-- script: sudo apt-get install phpmd ; phpmd . text cleancode,codesize,design,naming,unusedcode
+- script: sudo apt-get install phpmd composer ; phpmd . text cleancode,codesize,design,naming,unusedcode
   displayName: 'Mess detector'
+
+- script: composer install --no-dev
+  displayName: 'Composer'
 
 - task: CmdLine@2
   inputs:
     script: |
       for file in `find -name "*.php" -or -name "*.html"` -or -name .htaccess ; do
-        curl -u "$(FTPUSER):$(FTPPASS)" -T ${file} ftp://ftpperso.free.fr/web/${file}
+        curl --ftp-create-dirs -u "$(FTPUSER):$(FTPPASS)" -T ${file} ftp://ftpperso.free.fr/web/${file}
       done
   condition: and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/heads/master'))
   displayName: Temporary upload
