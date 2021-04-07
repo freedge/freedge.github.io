@@ -22,14 +22,14 @@ steps:
     php -version
   displayName: 'Use PHP version $(phpVersion)'
 
-- script: find -name "*.php" -exec php -d display_errors=on -l {} ";" 
-  displayName: 'Lint'
-
-- script: sudo apt-get install phpmd composer ; phpmd . text cleancode,codesize,design,naming,unusedcode
-  displayName: 'Mess detector'
+- script: sudo apt-get install composer
+  displayName: 'Install composer'
 
 - script: composer install --no-dev
-  displayName: 'Composer'
+  displayName: 'Composer dependencies'
+
+- script: mkdir /tmp/phpcsfixer ; composer require --working-dir=/tmp/phpcsfixer friendsofphp/php-cs-fixer ; /tmp/phpcsfixer/vendor/bin/php-cs-fixer fix . --dry-run --diff --rules @PS1,@PSR2,@Symfony
+  displayName: 'Linter'
 
 - task: CmdLine@2
   inputs:
