@@ -1,7 +1,2 @@
 order allow,deny
 allow from all
-<IfModule mod_headers.c>
-  Header set X-XSS-Protection "1; mode=block"
-  Header set Content-Security-Policy "script-src 'self';"
-</IfModule>
-
