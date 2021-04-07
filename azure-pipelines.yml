@@ -28,8 +28,11 @@ steps:
 - script: composer install --no-dev
   displayName: 'Composer dependencies'
 
-- script: mkdir /tmp/phpcsfixer ; composer require --working-dir=/tmp/phpcsfixer friendsofphp/php-cs-fixer ; /tmp/phpcsfixer/vendor/bin/php-cs-fixer fix . --dry-run --diff --rules @PS1,@PSR2,@Symfony
-  displayName: 'Linter'
+- script: mkdir /tmp/phpcsfixer ; composer require --working-dir=/tmp/phpcsfixer friendsofphp/php-cs-fixer ; /tmp/phpcsfixer/vendor/bin/php-cs-fixer fix . --dry-run --diff --rules @PSR1,@PSR2,@Symfony
+  displayName: 'PHP Linter'
+
+- script: sudo npm install -g htmllint-cli ; htmllint index.html
+  displayName: 'HTML Linter'
 
 - task: CmdLine@2
   inputs:
