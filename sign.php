@@ -4,11 +4,22 @@ require __DIR__.'/vendor/autoload.php';
 use Zend\Diactoros\Response\JsonResponse;
 use Zend\Diactoros\Response\SapiEmitter;
 
+$ADDEDHEADERS = [
+    'HTTP_VIA',
+    'HTTP_X_FORWARDED_FOR',
+];
+
 // generate a nice body
 $body = [
     'request' => 'sign.php',
     'ip' => $_SERVER['REMOTE_ADDR'],
 ];
+
+foreach ($ADDEDHEADERS as $header) {
+    if (isset($_SERVER[$header])) {
+        $body[strtolower($header)] = $_SERVER[$header];
+    }
+}
 
 try {
     $body['pubkey'] = file_get_contents(__DIR__.'/../.secret/pubkey');
