@@ -1,22 +1,22 @@
 <?php
 
-require __DIR__.'/vendor/autoload.php';
-use Zend\Diactoros\Response\JsonResponse;
-use Zend\Diactoros\Response\SapiEmitter;
-
-// could not find a poison emoji, so use what Bing suggested
-$body = [
-    'request' => 'poison.php',
-    'content' => '🐟',
-];
-
 // generate an arbitrary header to try to mess up with Squid
 if (isset($_GET['cus'])) {
     header(base64_decode($_GET['cus']));
 }
+?>
+<html>
+<meta charset="utf-8" />
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'" />
+<title>🐟</title>
+<body>
+<?php
 
-$response = new JsonResponse($body, 200, [
-    'date' => gmdate('D, d M Y H:i:s T'),
-]);
+if (isset($_GET['content'])) {
+    echo base64_decode($_GET['content']);
+}
 
-(new SapiEmitter())->emit($response);
+?>
+</body>
+</html>
+
