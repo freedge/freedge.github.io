@@ -1,0 +1,8 @@
+<html>
+<pre>
+PRINTER=$(avahi-browse --terminate --cache  --parsable --resolve _scanner._tcp | cut -d ';' -f 7 | xargs echo)
+snmpwalk  -v 1 -m all -c public $PRINTER 1
+</pre>
+
+<img src="http://EPSON120326.local:9100/justATry"></img>
+</html>
